@@ -1,0 +1,77 @@
+#--------------------------- Tool Specifications -------------------------
+#
+# Modify the following macros to reflect the tools you wish to use for
+# compiling and linking your code.
+#
+CC = "E:\matlab\bin\win64\mex.exe" -R2018a
+LD = $(CC)
+ 
+MODEL     = step2_compression_simulation
+TARGET      = sfun
+MODULE_SRCS   = c2_step2_compression_simulation.c half_type.c
+MODEL_SRC  = step2_compression_simulation_sfun.c
+MODEL_REG = step2_compression_simulation_sfun_registry.c
+MAKEFILE    = step2_compression_simulation_sfun.gmk
+MATLAB_ROOT  = e:\matlab\toolbox\stateflow\stateflow\..\..\..
+BUILDARGS   = 
+#------------------------------ Include/Lib Path ------------------------------
+ 
+USER_INCLUDES = -I"C:\Users\Egemen\Documents\MATLAB\drone-video-bandwidth-optimization\models\video_compression" 
+AUX_INCLUDES = 
+MLSLSF_INCLUDES  = \
+    -I"E:\matlab\extern\include" \
+    -I"E:\matlab\simulink\include" \
+    -I"E:\matlab\simulink\include\sf_runtime" \
+    -I"E:\matlab\stateflow\c\mex\include" \
+    -I"E:\matlab\rtw\c\src" \
+    -I"C:\Users\Egemen\Documents\MATLAB\drone-video-bandwidth-optimization\models\video_compression\slprj\_sfprj\step2_compression_simulation\_self\sfun\src" 
+
+THIRD_PARTY_INCLUDES = 
+
+INCLUDE_PATH = $(USER_INCLUDES) $(AUX_INCLUDES) $(MLSLSF_INCLUDES) $(COMPILER_INCLUDES) $(THIRD_PARTY_INCLUDES)
+ 
+#----------------- Compiler and Linker Options --------------------------------
+ 
+# Optimization Options
+ 
+CC_OPTS =  
+CPP_REQ_DEFINES = -DMATLAB_MEX_FILE
+ 
+# Uncomment this line to move warning level to W4
+# cflags = $(cflags:W3=W4)
+CFLAGS = $(CPP_REQ_DEFINES) $(INCLUDE_PATH) CFLAGS="$$CFLAGS $(CC_OPTS)"
+ 
+LDFLAGS =  
+ 
+AUXLDFLAGS = 
+#----------------------------- Source Files -----------------------------------
+ 
+THIRD_PARTY_SRCS =   
+REQ_SRCS  = $(MODEL_SRC) $(MODEL_REG) $(MODULE_SRCS) $(THIRD_PARTY_SRCS) 
+
+USER_OBJS =
+
+AUX_ABS_OBJS =
+
+REQ_OBJS = $(REQ_SRCS:.cpp=.obj)
+REQ_OBJS2 = $(REQ_OBJS:.c=.obj)
+OBJS = $(REQ_OBJS2) $(USER_OBJS) $(AUX_ABS_OBJS) $(THIRD_PARTY_OBJS)
+OBJLIST_FILE = step2_compression_simulation_sfun.mol
+SFCLIB = 
+AUX_LNK_OBJS = 
+USER_LIBS = 
+PARLIB = 
+ 
+#--------------------------------- Rules --------------------------------------
+ 
+MEX_FILE_NAME = $(MODEL)_$(TARGET).mexw64
+ 
+ $(MEX_FILE_NAME): $(MAKEFILE) $(OBJS) $(SFCLIB) $(AUX_LNK_OBJS)
+	@echo ### Linking ...
+	$(LD) -silent LD="$$MINGWROOT\bin\g++" LDFLAGS="$$LDFLAGS $(LDFLAGS) $(AUXLDFLAGS)" -output $(MEX_FILE_NAME) @$(OBJLIST_FILE) $(USER_LIBS) $(SFCLIB) $(PARLIB) $(IPPLIB) $(THIRD_PARTY_LIBS) 
+%.obj :    %.c
+	$(CC) -c $(CFLAGS) $<
+
+%.obj :    %.cpp
+	$(CC) -c $(CFLAGS) $<
+
